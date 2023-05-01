@@ -1,25 +1,28 @@
 /*
- * File:   Part1.c
+ * File:   Part2.c
  * Author: Nadia Shabbar, Tristen Miller
+ * 
+ * Drives a DC
  *
- * Created on May 1, 2023, 11:14 AM
+ * Created on May 1, 2023, 2:44 PM
  */
-
 
 #include "xc.h"
 #include "BOARD.h"
-#include "RC_Servo.h"
+//#include "RC_Servo.h"
 #include "AD.h"
 #include "LED.h"
+#include "pwm.h"
 #include <stdio.h>
+
 #define POT_MIN 0
 #define POT_MAX 1023
 
 float getSlope(uint16_t out_start, uint16_t out_end) {
     //Gets the slope used to scale the potentiometer's reading to a given output
     float slope = 0;
-    float temp1=out_end-out_start;
-    float temp2 = POT_MAX-POT_MIN;
+    float temp1 = out_end - out_start;
+    float temp2 = POT_MAX - POT_MIN;
     slope = (temp1) / temp2;
     return slope;
 }
@@ -27,10 +30,10 @@ float getSlope(uint16_t out_start, uint16_t out_end) {
 int getOutput(float slope, uint16_t input, uint16_t out_start) {
     //Scales an input to the appropriate output
     float output = 0;
-    float temp = (input-POT_MIN);
+    float temp = (input - POT_MIN);
     output = out_start + slope * (temp);
- 
-    return (int)output;
+
+    return (int) output;
 }
 
 char getPattern(int numLED) {
@@ -73,45 +76,29 @@ void setLED(uint16_t input) {
     return;
 }
 
-void Servo_Init(void) {
-    //Sets port w3 as an AD input, and port W7 as a digital output using the RC timers
-    RC_Init();
+void DC_Motor_Init(void) {
+    PWM_Init();
     AD_Init();
-    AD_AddPins(AD_PORTW3);
-    RC_AddPins(RC_PORTW07);
     LED_Init();
     LED_AddBanks(LED_BANK1 | LED_BANK2 | LED_BANK3);
+    AD_AddPins(AD_PORTW5);
+    PWM_AddPins(PWM_PORTY12);
 }
-#ifdef PART1
+#ifdef PART2
 int main(void) {
     BOARD_Init();
-    Servo_Init();
-    int pot_reading = 0;
-    while (1) {
-        //main event loop
-        if (AD_IsNewDataReady()) {
-            pot_reading = AD_ReadADPin(AD_PORTW3);
+    DC_Motor_Init();
+    uint16_t pot_reading =0;
+    while(1){
+        if(AD_IsNewDataReady()){
+            pot_reading = AD_ReadADPin(AD_PORTW5);
             setLED(pot_reading);
-            float ServoSlope = getSlope(MINPULSE, MAXPULSE);
-            int pulse = getOutput(ServoSlope, pot_reading, MINPULSE);
-            RC_SetPulseTime(RC_PORTW07, pulse);
+            float MotorSlope = getSlope(MIN_PWM,MAX_PWM);
+            int Pulse_Width = getOutput(MotorSlope,pot_reading,MIN_PWM);
+            PWM_SetDutyCycle(PWM_PORTY12,Pulse_Width);
+            
         }
     }
-    return 0;
-}
-#endif
-#ifdef SERVO_MIN_TEST
-int main(void){
-    BOARD_Init();
-    Servo_Init();
-    int foo = RC_GetPulseTime(RC_PORTW07);
-    for(int i =0;i<10000;i++){
-        asm("NOP");
-    }
-    int x = 1;
-    printf("Changing pulse by %d",x);
-    RC_SetPulseTime(RC_PORTW07,foo+x);
-    while(1);
     return 0;
 }
 #endif
