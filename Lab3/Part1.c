@@ -82,7 +82,7 @@ void Servo_Init(void) {
     LED_Init();
     LED_AddBanks(LED_BANK1 | LED_BANK2 | LED_BANK3);
 }
-
+#ifndef SERVO_MIN_TEST
 int main(void) {
     BOARD_Init();
     Servo_Init();
@@ -99,3 +99,18 @@ int main(void) {
     }
     return 0;
 }
+#else
+int main(void){
+    BOARD_Init();
+    Servo_Init();
+    int foo = RC_GetPulseTime(RC_PORTW07);
+    for(int i =0;i<10000;i++){
+        asm("NOP");
+    }
+    int x = 1;
+    printf("Changing pulse by %d",x);
+    RC_SetPulseTime(RC_PORTW07,foo+x);
+    while(1);
+    return 0;
+}
+#endif
