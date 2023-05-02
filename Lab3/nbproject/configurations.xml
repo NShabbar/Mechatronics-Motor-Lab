@@ -57,7 +57,7 @@
       </logicalFolder>
       <itemPath>Part1.c</itemPath>
       <itemPath>Part2.c</itemPath>
-      <itemPath>../../../../../ECE118/src/Part4.c</itemPath>
+      <itemPath>Part4.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
