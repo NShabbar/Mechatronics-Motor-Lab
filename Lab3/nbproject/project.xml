@@ -16,6 +16,7 @@
                 <sourceRootElem>../../../../ECE118/include</sourceRootElem>
                 <sourceRootElem>../../../../ECE118/src</sourceRootElem>
                 <sourceRootElem>../../../../../ECE118</sourceRootElem>
+                <sourceRootElem>.</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
