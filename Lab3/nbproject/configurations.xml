@@ -57,6 +57,7 @@
       </logicalFolder>
       <itemPath>Part1.c</itemPath>
       <itemPath>Part2.c</itemPath>
+      <itemPath>../../../../../ECE118/src/Part4.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -273,6 +274,8 @@
         <property key="wpo-lto" value="false"/>
       </C32Global>
       <item path="Part1.c" ex="true" overriding="false">
+      </item>
+      <item path="Part2.c" ex="true" overriding="false">
       </item>
     </conf>
   </confs>
